@@ -1,6 +1,5 @@
 
 #!/bin/bash
-# A sample Bash script, by Ryan
 echo Hello World!
 spacer="\n\nBREAK\n\n"   # Assigns result of 'echo' command to 'a' ...
 
