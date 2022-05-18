@@ -1,3 +1,7 @@
+# add img folder for animated plot exercise
+01_week/exercises/1_8_imgs
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
