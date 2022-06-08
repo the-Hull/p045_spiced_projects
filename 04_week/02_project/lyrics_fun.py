@@ -11,7 +11,7 @@ import numpy as np
 def refine_artist_link(artist_req: requests.models.Response, artist_url: str, base_url: str, verbose: bool) -> str:
 
     # artist does not exist
-    str_no_match = "    We couldn't find any artists matching your query."
+    str_no_match = "We couldn't find any artists matching your query."
     if re.search(str_no_match, artist_req.text):
         if verbose:
             print(f'    No unique artist found')
@@ -91,6 +91,10 @@ def get_artist(artist: str, verbose: bool) -> dict:
 
 def extract_lyric_links(artist, drop_duplicates = False, drop_instrumentals = False, verbose = False) -> list:
 
+    if not artist['exists_on_site']:
+        print("    Can only proceed with an artist listed at lyrics.com, ensure exists_on_site is True. Returning None")
+        return None
+
     response = requests.get(artist['url_refined'])
 
     html = BeautifulSoup(markup = response.text, features = 'html.parser')
@@ -135,6 +139,10 @@ def extract_lyric_links(artist, drop_duplicates = False, drop_instrumentals = Fa
 
 
 def extract_lyric(artist_links: dict, verbose: bool = False):
+
+    if artist_links is None:
+        print("    Can only proceed with an artist listed at lyrics.com, ensure lyric link extraction was successful. Returning None")
+        return None
 
     lyric_list = []
     title_list = []
