@@ -23,7 +23,7 @@ def refine_artist_link(artist_req: requests.models.Response, artist_url: str, ba
     if re.search(str_multi_match, artist_req.text):
         if verbose:
             print(f'Several options for artist; picking first')
-        artist_url_clean = base_url + BeautifulSoup(artist_req.text).find(class_= "tal fx").a['href']
+        artist_url_clean = base_url + "/" + BeautifulSoup(artist_req.text, features = 'html.parser').find(class_= "tal fx").a['href']
         return artist_url_clean
 
 
@@ -52,8 +52,8 @@ def get_artist(artist: str, verbose: bool) -> dict:
     # encode artist and 
     # post request to lyrics.com
 
-    base_url = 'https://www.lyrics.com/'
-    artist_url = base_url + 'artist/' + upa.quote(str.strip(artist)) + '/' 
+    base_url = 'https://www.lyrics.com'
+    artist_url = base_url + '/artist/' + upa.quote(str.strip(artist)) + '/' 
 
     artist_req = requests.get(artist_url)
 
@@ -88,16 +88,37 @@ def get_artist(artist: str, verbose: bool) -> dict:
 
 
 
-def extract_lyric_links(artist, drop_duplicates = False) -> list:
-    html = BeautifulSoup(markup = artist['response'].text, features = 'html.parser')
+def extract_lyric_links(artist, drop_duplicates = False, verbose = False) -> list:
+
+    response = requests.get(artist['url_refined'])
+
+    html = BeautifulSoup(markup = response.text, features = 'html.parser')
     links = [h.a['href'] for h in html.find_all('td', class_ = 'tal qx')]
     links = [artist['base_url'] + l for l in links]
 
     if drop_duplicates:
         dup = pd.Series([re.search("[^\/]+$", al).group(0) for al in links])
         dup_idx = dup[dup.duplicated().values==False].index.values.astype(int)
+        if verbose:
+            print(f'Dropped {len(links) - len(dup_idx)} duplicated lyric links')
         links = list(np.array(links)[dup_idx])
+    else:
+        if verbose:
+            print(f'No lyric links dropped')
+
+
+    res = {
+    'base_url' : artist['base_url'],
+    'artist' : artist['artist'], 
+    'url' : artist['url'],
+    'url_refined' : artist['url_refined'],
+    'response' : response,
+    'status_code' : response.status_code,
+    'exists_on_site' : artist['exists_on_site'],
+    'links' : links
+    }
 
 
 
-    return(links)
+
+    return res
