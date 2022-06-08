@@ -2,6 +2,8 @@ import requests
 import urllib.parse as upa
 from bs4 import BeautifulSoup
 import re
+import pandas as pd
+import numpy as np
 
 
 
@@ -71,6 +73,7 @@ def get_artist(artist: str, verbose: bool) -> dict:
     artist_exists = artist_url_refined is not None
 
     res = {
+        'base_url' : base_url,
         'artist' : artist, 
         'url' : artist_url,
         'url_refined' : artist_url_refined,
@@ -85,3 +88,16 @@ def get_artist(artist: str, verbose: bool) -> dict:
 
 
 
+def extract_lyric_links(artist, drop_duplicates = False) -> list:
+    html = BeautifulSoup(markup = artist['response'].text, features = 'html.parser')
+    links = [h.a['href'] for h in html.find_all('td', class_ = 'tal qx')]
+    links = [artist['base_url'] + l for l in links]
+
+    if drop_duplicates:
+        dup = pd.Series([re.search("[^\/]+$", al).group(0) for al in links])
+        dup_idx = dup[dup.duplicated().values==False].index.values.astype(int)
+        links = list(np.array(links)[dup_idx])
+
+
+
+    return(links)
