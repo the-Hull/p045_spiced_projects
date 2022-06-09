@@ -155,36 +155,31 @@ def extract_lyric(artist_links: dict, verbose: bool = False):
         print("    Can only proceed with an artist listed at lyrics.com, ensure lyric link extraction was successful. Returning None")
         return None
 
-    lyric_list = []
-    title_list = []
-    response_list = []
-    status_list = []
+    n_links = len(artist_links['links'])
 
-    for li in artist_links['links']:
+    lyric_list = [None] * n_links
+    title_list = [None] * n_links
+    response_list = [None] * n_links
+    status_list = [None] * n_links
+
+    for id, li in enumerate(artist_links['links']):
 
         response = requests.get(li)
 
-        response_list.append(response)
-        status_list.append(response.status_code)
+        response_list[id] = response
+        status_list[id] = response.status_code
 
         if response.status_code == 200:
             html = BeautifulSoup(markup = response.text, features = 'html.parser')
             ly = str.join(" ", html.find(name = 'pre', id = 'lyric-body-text').text.split())
-            lyric_list.append(ly)
+            lyric_list[id] = ly
 
             ti = html.find(name = 'h1', id = 'lyric-title-text').text
-            title_list.append(ti)
+            title_list[id] = ti
 
 
 
 
-        else:
-            lyric_list.append(None)
-            title_list.append(None)
-
-
-
-    # return [title_list, lyric_list]
 
 
     res = {
@@ -230,4 +225,12 @@ def process_artist(artist: str, drop_duplicates: bool = True, drop_instrumentals
 
     return res
 
+
+
+
+def make_lyric_df(artist_lyrics: dict) -> pd.core.frame.DataFrame:
     
+    lyric_df = pd.DataFrame({'artist' : artist_lyrics['artist'], 'title' : artist_lyrics['lyric_text']})
+
+    return lyric_df
+
