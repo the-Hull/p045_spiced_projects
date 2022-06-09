@@ -4,8 +4,9 @@ from bs4 import BeautifulSoup
 import re
 import pandas as pd
 import numpy as np
-
-
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
 
 
 def refine_artist_link(artist_req: requests.models.Response, artist_url: str, base_url: str, verbose: bool) -> str:
@@ -216,6 +217,7 @@ def process_artist(artist: str, drop_duplicates: bool = True, drop_instrumentals
         res = artist_extract
     else:
         raise ValueError("artist_links cannot be None; indicates no links were found.")
+        # check if 1 > not None links
 
 
     return res
@@ -225,7 +227,75 @@ def process_artist(artist: str, drop_duplicates: bool = True, drop_instrumentals
 
 def make_lyric_df(artist_lyrics: dict) -> pd.core.frame.DataFrame:
     
-    lyric_df = pd.DataFrame({'artist' : artist_lyrics['artist'], 'title' : artist_lyrics['lyric_text']})
+    lyric_df = pd.DataFrame({'artist' : artist_lyrics['artist'], 'text' : artist_lyrics['lyric_text']})
 
     return lyric_df
 
+
+
+def make_model_df(artist_list: list):
+
+    if len(artist_list) != 2:
+        raise ValueError("Supply a list of two artist lyric dictionaries to proceed")
+
+    dfs = []
+    for ar in artist_list:
+        dfs.append(make_lyric_df(ar))
+    
+    model_df = pd.concat(dfs, axis = 0)
+
+    return model_df
+
+
+def run_logreg(model_df, new_lyric, c_strength = 1):
+
+    new_lyric = pd.DataFrame({'text' : new_lyric})
+    
+    X = model_df[['text']]
+    y = model_df[['artist']]
+
+    log_reg = Pipeline(
+        [('transformer', TfidfVectorizer(stop_words = 'english')),
+        ('logreg', LogisticRegression(C=c_strength, class_weight='balanced'))
+
+        ]
+    )
+
+    log_reg.fit(X, y)
+
+    res = {
+        'predicted_artist': log_reg.predict(X = new_lyric),
+        'predicted_proba' : log_reg.predict_proba(X = new_lyric)[0]
+    }
+
+    
+
+
+# def predict_artist(first: str, second: str, drop_ =True, guess_lyrics: str, verbose = True):
+    
+#     if not ((isinstance(first, 'str')) or (isinstance(second, 'str'))):
+#         raise ValueError('Artists must be supplied as strings')
+    
+#     if first == second:
+#         raise ValueError('Please supply two different artists')
+
+#     artist_list = [str(first), str(second)]
+
+
+
+
+
+
+    # loop over artists to get lyrics dic
+
+    # make model df
+
+    # stats
+        # transform
+
+        # fit
+
+        # predict
+    # if verbose    
+        # print prediction and prob    
+    # return predicted probs, prediction
