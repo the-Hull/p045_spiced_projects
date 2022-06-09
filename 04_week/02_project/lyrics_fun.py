@@ -177,11 +177,6 @@ def extract_lyric(artist_links: dict, verbose: bool = False):
             ti = html.find(name = 'h1', id = 'lyric-title-text').text
             title_list[id] = ti
 
-
-
-
-
-
     res = {
     'base_url' : artist_links['base_url'],
     'artist' : artist_links['artist'], 
