@@ -89,7 +89,7 @@ def get_artist(artist: str, verbose: bool) -> dict:
 
 
 
-def extract_lyric_links(artist, drop_duplicates = False, drop_instrumentals = False, verbose = False) -> list:
+def extract_lyric_links(artist, drop_duplicates = False, drop_instrumentals = False, drop_similar = False, verbose = False) -> dict:
 
     if not artist['exists_on_site']:
         print("    Can only proceed with an artist listed at lyrics.com, ensure exists_on_site is True. Returning None")
@@ -121,6 +121,17 @@ def extract_lyric_links(artist, drop_duplicates = False, drop_instrumentals = Fa
     else:
         if verbose:
             print(f'    No instrumental lyric link dropped')
+
+
+    if drop_similar:
+        sim_idx = [el is None for el in [re.search('(?i)(Remix|Acoustic)', li ) for li in links]]
+    
+        if verbose:
+            print(f'    Dropped {len(links) - sum(np.array(sim_idx))} Remix/Acoustic lyric link(s)')
+        links = list(np.array(links)[np.array(sim_idx)])
+    else:
+        if verbose:
+            print(f'    No Remix/Acoustic lyric link dropped')
 
 
     res = {
@@ -192,3 +203,31 @@ def extract_lyric(artist_links: dict, verbose: bool = False):
 
     return res
 
+
+
+def process_artist(artist: str, drop_duplicates: bool = True, drop_instrumentals: bool = True, drop_similar:bool = True, verbose:bool = True):
+    """
+    Downloads all lyrics for an _artist_ from lyrics.com with safe handling of duplicate artists. 
+    Allows dropping instrumentals, similar song versions in remixes and acoustic versions, and duplicate listings. 
+    The verbose option gives some details on the processing.
+    """
+
+    res = None
+
+    artist = get_artist(artist=artist, verbose=True)
+
+    if artist['exists_on_site']:
+        artist_links = extract_lyric_links(artist, drop_duplicates = True, drop_instrumentals = True, drop_similar=True, verbose=True)
+    else:
+        raise ValueError("Artist does not exist on site; artist['exists_on_site'] must be True")
+    
+    if artist_links:
+        artist_extract = extract_lyric(artist_links=artist_links, verbose = False)
+        res = artist_extract
+    else:
+        raise ValueError("artist_links cannot be None; indicates no links were found.")
+
+
+    return res
+
+    
