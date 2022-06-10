@@ -246,56 +246,75 @@ def make_model_df(artist_list: list):
 
     return model_df
 
+def select_proba_idx(predicted_artist:str, artists: list):
 
-def run_logreg(model_df, new_lyric, c_strength = 1):
+    artists = sorted(artists)
+    idx = [i for i, ar in enumerate(artists) if ar == predicted_artist][0]
+    return idx
 
-    new_lyric = pd.DataFrame({'text' : new_lyric})
-    
-    X = model_df[['text']]
-    y = model_df[['artist']]
+
+
+def run_logreg(moddf, new_lyric, c_strength = 1):
+
+    new_lyric = pd.DataFrame({'text' : new_lyric}, index=[0])
+   
+    X = moddf['text']
+    y = moddf['artist']
 
     log_reg = Pipeline(
         [('transformer', TfidfVectorizer(stop_words = 'english')),
         ('logreg', LogisticRegression(C=c_strength, class_weight='balanced'))
-
         ]
     )
-
     log_reg.fit(X, y)
 
+    predicted_artist = log_reg.predict(X = new_lyric['text'])[0]
+    predicted_proba = log_reg.predict_proba(X = new_lyric['text'])
+    
+    prob_idx = select_proba_idx(predicted_artist=predicted_artist, artists=moddf['artist'].unique())
+
     res = {
-        'predicted_artist': log_reg.predict(X = new_lyric),
-        'predicted_proba' : log_reg.predict_proba(X = new_lyric)[0]
+        'predicted_artist': predicted_artist,
+        # 'predicted_proba' : predicted_proba[0][prob_idx]
+        'predicted_proba' : max(predicted_proba[0])
     }
 
+    return res
     
 
-
-# def predict_artist(first: str, second: str, drop_ =True, guess_lyrics: str, verbose = True):
     
-#     if not ((isinstance(first, 'str')) or (isinstance(second, 'str'))):
-#         raise ValueError('Artists must be supplied as strings')
+
+def predict_artist(first: str, second: str, new_lyric: str, drop_duplicates: bool = True, drop_instrumentals: bool = True, drop_similar:bool = True, verbose:bool = True):
     
-#     if first == second:
-#         raise ValueError('Please supply two different artists')
-
-#     artist_list = [str(first), str(second)]
-
-
-
+    if not ((isinstance(first, str)) or (isinstance(second, str))):
+        raise ValueError('Artists must be supplied as strings')
+    
+    if first == second:
+        raise ValueError('Please supply two different artists')
 
 
+    artist_list = [str(first), str(second)]
 
+    artist_res = [None] * 2
     # loop over artists to get lyrics dic
+    for i, ar in enumerate(artist_list):
+        artist_res[i] = process_artist(
+            artist = ar,
+            drop_duplicates = True,
+            drop_instrumentals = True,
+            drop_similar = True,
+            verbose = True
+        )
+
+
 
     # make model df
+    model_df = make_model_df(artist_res)
 
-    # stats
-        # transform
+    # predict artist
+    mod_res = run_logreg(moddf=model_df, new_lyric=new_lyric)
 
-        # fit
+    print(pd.DataFrame(mod_res, index = [0]))
 
-        # predict
-    # if verbose    
-        # print prediction and prob    
-    # return predicted probs, prediction
+    return mod_res
+  
