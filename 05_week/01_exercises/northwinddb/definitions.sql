@@ -30,7 +30,13 @@ CREATE TABLE IF NOT EXISTS orders(
     ship_country TEXT NOT NULL,
 
     FOREIGN KEY(employee_id)
-      REFERENCES employees(employee_id) 
+      REFERENCES employees(employee_id), 
+    FOREIGN KEY(customer_id)
+        REFERENCES customers(customerID),
+    FOREIGN KEY(ship_via)
+        REFERENCES shippers(shipper_id)
+
+      
 );
 
 \copy orders FROM '/home/alex/_work/p045_spiced/nlpoblano-student-code/05_week/00_data/northwind_data_clean/data/orders.csv' DELIMITER ',' CSV HEADER NULL AS 'NULL'; 
@@ -46,7 +52,11 @@ CREATE TABLE IF NOT EXISTS order_details(
     product_id SMALLINT,
     unit_price NUMERIC,
     quantity SMALLINT,
-    discount NUMERIC
+    discount NUMERIC,
+
+
+    FOREIGN KEY(order_id)
+      REFERENCES orders(order_id) 
 
 );
 
@@ -77,6 +87,53 @@ CREATE TABLE IF NOT EXISTS employees(
 );
 
 \copy employees FROM '/home/alex/_work/p045_spiced/nlpoblano-student-code/05_week/00_data/northwind_data_clean/data/employees.csv' DELIMITER ',' CSV HEADER NULL 'NULL';
+
+DROP TABLE IF EXISTS products CASCADE;
+CREATE TABLE IF NOT EXISTS products(
+    productID SERIAL PRIMARY KEY,
+    productName TEXT,
+    supplierID TEXT,
+    categoryID TEXT,
+    quantityPerUnit TEXT,
+    unitPrice NUMERIC,
+    unitsInStock NUMERIC,
+    unitsOnOrder NUMERIC,
+    reorderLevel NUMERIC,
+    discontinued BOOL
+
+
+);
+
+
+
+\copy products FROM '/home/alex/_work/p045_spiced/nlpoblano-student-code/05_week/00_data/northwind_data_clean/data/products.csv' DELIMITER ',' CSV HEADER NULL 'NULL';
+
+
+
+DROP TABLE IF EXISTS customers CASCADE;
+CREATE TABLE IF NOT EXISTS customers(
+    customerID VARCHAR (10) PRIMARY KEY,
+    companyName TEXT,
+    contactName TEXT,
+    contactTitle TEXT,
+    customer_address TEXT,
+    city TEXT,
+    region TEXT,
+    postalCode TEXT,
+    country TEXT,
+    phone TEXT,
+    fax TEXT
+
+
+);
+
+
+
+\copy customers FROM '/home/alex/_work/p045_spiced/nlpoblano-student-code/05_week/00_data/northwind_data_clean/data/customers.csv' DELIMITER ',' CSV HEADER NULL 'NULL';
+
+
+
+
 
 
 
