@@ -2,7 +2,7 @@
 
 SET DateStyle TO ISO, DMY;
 
-DROP TABLE IF EXISTS shippers;
+DROP TABLE IF EXISTS shippers CASCADE;
 CREATE TABLE IF NOT EXISTS shippers(
     shipper_id SERIAL PRIMARY KEY,
     company_name VARCHAR( 20 ) NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS orders(
 
 
 
-DROP TABLE IF EXISTS order_details;
+DROP TABLE IF EXISTS order_details CASCADE;
 CREATE TABLE IF NOT EXISTS order_details(
     order_id SMALLINT,
     product_id SMALLINT,
@@ -138,8 +138,9 @@ CREATE TABLE IF NOT EXISTS customers(
 
 
 
-DROP TABLE IF EXISTS order_totals;
-DROP TABLE IF EXISTS employee_activity;
+DROP TABLE IF EXISTS order_totals CASCADE;
+DROP TABLE IF EXISTS employee_activity CASCADE;
+DROP TABLE IF EXISTS customer_activity CASCADE;
 
 
 
@@ -154,12 +155,33 @@ SELECT ord.employee_id, COUNT(ord.order_id) as total_orders, SUM(ot.total_price)
     ON ord.order_id = ot.order_id
     GROUP BY ord.employee_id;
 
-SELECT *, ROUND(total_revenue/total_orders, 2) AS sale_efficiency 
-    FROM employee_activity 
-    ORDER BY sale_efficiency DESC;    
+
+SELECT 
+    COUNT(ot.order_id), 
+    SUM(ot.total_price) as total_revenue,
+    od.customer_id ,
+    MIN(cu.companyname) as companyname
+    INTO customer_activity
+    FROM order_totals AS ot
+    RIGHT JOIN orders AS od ON ot.order_id = od.order_id
+    LEFT JOIN customers AS cu ON od.customer_id = cu.customerid
+    GROUP BY od.customer_id
+    ORDER BY total_revenue DESC;
+
+-- SELECT *, ROUND(total_revenue/total_orders, 2) AS sale_efficiency 
+--     FROM employee_activity 
+--     ORDER BY sale_efficiency DESC;    
 
 
+-- Find the hiring age of each employee
+CREATE OR REPLACE VIEW employee_age AS
+SELECT 
+    AGE(hire_date, birth_date) as hiring_age, 
+    CONCAT(title_of_courtesy, ' ', first_name, ' ', last_name) as full_name,
+    employee_id 
+    FROM employees;
 
+SELECT * FROM employee_age;
 
 
 -- SELECT customer_id, AVG(freight) as freight_avg FROM orders

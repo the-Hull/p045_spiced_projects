@@ -36,14 +36,35 @@
 --     GROUP BY discontinued;
 
 -- Find products with less units in stock than the quantity on order.
-SELECT productname, unitsonorder, unitsinstock FROM products
-    WHERE unitsonorder > unitsinstock;
+-- SELECT productname, unitsonorder, unitsinstock FROM products
+--     WHERE unitsonorder > unitsinstock;
 
 -- Find the customer who had the highest order amount
+-- SELECT 
+--     COUNT(ot.order_id), 
+--     SUM(ot.total_price) as total_revenue,
+--     od.customer_id ,
+--     MIN(cu.companyname) as companyname
+--     FROM order_totals AS ot
+--     RIGHT JOIN orders AS od ON ot.order_id = od.order_id
+--     LEFT JOIN customers AS cu ON od.customer_id = cu.customerid
+--     GROUP BY od.customer_id
+--     ORDER BY total_revenue DESC;
 
 -- Get orders for a given employee and the according customer
+-- SELECT order_id, customer_id, employee_id FROM orders
+-- ORDER BY employee_id;
+
 
 -- Find the hiring age of each employee
+CREATE OR REPLACE VIEW employee_age AS
+SELECT 
+    AGE(hire_date, birth_date) as hiring_age, 
+    CONCAT(title_of_courtesy, ' ', first_name, ' ', last_name) as full_name,
+    employee_id 
+    FROM employees;
 
 -- Create views and/or named queries for some of these queries
+-- CREATE VIEW 
 
+SELECT * FROM employee_age;
