@@ -68,3 +68,4 @@ SELECT
 -- CREATE VIEW 
 
 SELECT * FROM employee_age;
+SELECT * FROM customer_activity;

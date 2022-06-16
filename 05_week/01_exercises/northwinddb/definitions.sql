@@ -159,8 +159,10 @@ SELECT ord.employee_id, COUNT(ord.order_id) as total_orders, SUM(ot.total_price)
 SELECT 
     COUNT(ot.order_id), 
     SUM(ot.total_price) as total_revenue,
-    od.customer_id ,
-    MIN(cu.companyname) as companyname
+    od.customer_id,
+    MIN(cu.companyname) as companyname,
+    MIN(od.ship_country) as country,
+    MIN(od.ship_via) as shippername
     INTO customer_activity
     FROM order_totals AS ot
     RIGHT JOIN orders AS od ON ot.order_id = od.order_id
