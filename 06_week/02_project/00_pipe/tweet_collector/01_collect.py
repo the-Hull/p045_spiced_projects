@@ -4,6 +4,15 @@ import os
 # from credentials_anastasia import BEARER_TOKEN
 import logging
 
+
+from datetime import datetime
+
+now = datetime.now()
+
+current_time = now.strftime("%H:%M:%S")
+logging.critical("\n" + current_time)
+
+
 BEARER_TOKEN = os.getenv("TWITTER_BEARER")
 
 
