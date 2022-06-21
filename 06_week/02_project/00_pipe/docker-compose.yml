@@ -9,6 +9,8 @@ services:
   tweet_collector:
     build: tweet_collector/
     volumes:
+    - /etc/timezone:/etc/timezone:ro
+    - /etc/localtime:/etc/localtime:ro
     - ./tweet_collector/:/app
     depends_on:
     - mongodb
