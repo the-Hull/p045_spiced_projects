@@ -29,7 +29,7 @@ def remove_emojis(data):
     return re.sub(emoj, '', data)
 
 def remove_links(data):
-    return re.sub('(https[\W\w:/.]+[\n]?)', '', data)
+    return re.sub('(https[\w:\/.%]+)', '', data)
 def remove_linebreaks(data):
     return re.sub('[\n]+', ' ', data)
 
