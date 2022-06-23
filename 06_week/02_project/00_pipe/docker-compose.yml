@@ -16,3 +16,13 @@ services:
     - mongodb
     env_file:
     - .env
+
+  postgresdb:
+    image: postgres
+    ports:
+    - "5555:5432"
+    depends_on:
+    - tweet_collector
+    env_file:
+    - .env
+    

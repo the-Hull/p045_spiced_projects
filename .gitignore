@@ -142,3 +142,4 @@ dmypy.json
 #Large files 
 .jar
 .csv
+06_week/01_exercises/api_test.ipynb

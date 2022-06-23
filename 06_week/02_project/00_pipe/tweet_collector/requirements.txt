@@ -2,3 +2,6 @@ pymongo
 tweepy==4.4.0
 dnspython
 pandas
+vaderSentiment
+sqlalchemy
+psycopg2
