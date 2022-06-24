@@ -115,7 +115,6 @@ def write_to_mongo(df):
 
 def sentiment_analyses(mongo_db, collection_name):
 
-    print(mongo_db)
 
     tweets = mongo_db[collection_name]
 
@@ -144,6 +143,8 @@ def sentiment_analyses(mongo_db, collection_name):
 
 def write_to_postgres(df):
 
+    print(df.info())
+
     pg_host = 'postgresdb'
     pg_user = os.getenv('POSTGRES_USER')
     pg_db = os.getenv('POSTGRES_DB')
@@ -152,7 +153,7 @@ def write_to_postgres(df):
 
     pg = create_engine(f'postgresql://{pg_user}:{pg_pass}@{pg_host}:5432/{pg_db}', echo=True)
 
-    df.to_sql('tweets', pg, if_exists='replace')
+    df.drop(columns = ['_id']).to_sql('tweets', pg, if_exists='replace')
 
     return True
 
