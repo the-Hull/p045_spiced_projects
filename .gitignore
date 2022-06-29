@@ -142,4 +142,8 @@ dmypy.json
 #Large files 
 .jar
 .csv
+
+
 06_week/01_exercises/api_test.ipynb
+
+07_week/03_encounters/interactive_climate_map
