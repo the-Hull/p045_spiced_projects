@@ -70,5 +70,5 @@ def get_predicted_label(model, image, classes):
     image = np.expand_dims(image, axis = 0)
     class_idx = np.argmax(model.predict(image), axis = 1)
 
-    return classes[class_idx[0]]
+    return classes[class_idx[0]], class_idx[0]
 

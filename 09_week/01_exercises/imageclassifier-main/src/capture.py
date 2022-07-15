@@ -22,6 +22,8 @@ if __name__ == "__main__":
     key = None
     frame_count = 0
     pred_class = 'thinking..'
+    cols = [(0,0,0)] * 3
+
 
     model = tf.keras.models.load_model('../../02_project/vgg_retrained.h5')
 
@@ -61,24 +63,48 @@ if __name__ == "__main__":
             if key == 'p':
                 pred_mode = not pred_mode
 
+            # cols = [(0,0,0)] * 3
             if pred_mode:
 
                 image = frame[y:y+width, x:x+width, :]
 
+                classes = os.listdir('../../00_data')
                 if frame_count % 30 == 0:
-                    pred_class = get_predicted_label(
+                    pred_class, pred_idx = get_predicted_label(
                         model=model, 
                         image=image, 
-                        classes=os.listdir('../../00_data'))
+                        classes=classes)
+                    cols = [(0,0,0)] * 3
+                    cols[pred_idx] = (0,0,255)
 
-                write_text_cam(
-                text=pred_class,
-                frame=frame,
-                col=(255,0,0),
-                offset=offset-10,
-                y=y,
-                x=x
-                )
+                    
+
+
+
+
+                xs = [60, 300, 460]
+                for i,v in enumerate(xs):
+                    write_text_cam(
+                        text=classes[i],
+                        frame=frame,
+                        col=cols[i],
+                        offset=offset-10,
+                        y=y-10,
+                        x=v
+                    )
+
+
+
+
+
+                # write_text_cam(
+                # text=pred_class,
+                # frame=frame,
+                # col=(255,0,0),
+                # offset=offset-10,
+                # y=y,
+                # x=x
+                # # )
 
 
 
