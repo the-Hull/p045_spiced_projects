@@ -21,8 +21,8 @@ if __name__ == "__main__":
     webcam = init_cam(640, 480)
     key = None
     frame_count = 0
-    pred_class = 'thinking..'
     cols = [(0,0,0)] * 3
+    classes = ['here', 'we', 'go...']
 
 
     model = tf.keras.models.load_model('../../02_project/vgg_retrained.h5')
@@ -76,12 +76,7 @@ if __name__ == "__main__":
                         classes=classes)
                     cols = [(0,0,0)] * 3
                     cols[pred_idx] = (0,0,255)
-
                     
-
-
-
-
                 xs = [60, 300, 460]
                 for i,v in enumerate(xs):
                     write_text_cam(
@@ -93,10 +88,6 @@ if __name__ == "__main__":
                         x=v
                     )
 
-
-
-
-
                 # write_text_cam(
                 # text=pred_class,
                 # frame=frame,
@@ -105,8 +96,6 @@ if __name__ == "__main__":
                 # y=y,
                 # x=x
                 # # )
-
-
 
             # disable ugly toolbar
             cv2.namedWindow('frame', flags=cv2.WINDOW_GUI_NORMAL)              
