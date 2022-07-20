@@ -19,6 +19,14 @@ def get_movie(id: int, movie_df: str) -> str :
     """
     return movie_df.loc[id, 'title']
 
+# def match_movie_title(input_title, movie_titles):
+#     """
+#     Matches inputed movie title to existing one in the list with fuzzywuzzy
+#     """
+#     matched_title = process.extractOne(input_title, movie_titles)[0]
+
+#     return matched_title
+
 
 
 def recommend_nmf(query, user_ratings, movies, model, k=10):
@@ -75,3 +83,20 @@ def recommend_nmf(query, user_ratings, movies, model, k=10):
 
 
     return top_rankings
+
+
+
+def recommend_most_popular(query, user_ratings, movies, k=5):
+
+
+    user_ratings = user_ratings.loc[:, [x not in query.keys() for x in user_ratings.columns]]
+
+    top_mean_ratings = user_ratings.apply(axis=0, func = np.mean).sort_values(ascending = False)[:k+1]
+
+    top_mean_ratings = top_mean_ratings.to_frame().T
+
+    print(get_movie(id = top_mean_ratings.columns, movie_df = movies))
+
+
+
+    return top_mean_ratings
