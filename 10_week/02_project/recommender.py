@@ -20,4 +20,10 @@ recommendation = su.recommend_nmf(
      k = 5)
 
 
-print(recommendation)
+# print(recommendation)
+
+
+# su.recommend_most_popular(query = {296: 2, 593: 1,589:2, 1:5, 2:5, 3:2.5, 356: 4, 480: 2, 260: 5, 12: 4, 300: 1},
+#     user_ratings=ratings,
+#     movies=movies,
+#     k = 5)
