@@ -1,4 +1,17 @@
 import pandas as pd
+from sklearn.impute import SimpleImputer
+import pickle
+import numpy as np
+
+
+
+def prep_ratings(path_json, imputer_fill):
+    ratings = pd.read_json(path_json)
+    imputer = SimpleImputer(strategy="constant", fill_value=imputer_fill)
+    ratings = pd.DataFrame(imputer.fit_transform(ratings), index =ratings.index, columns =ratings.columns)
+    return ratings
+    
+
 
 def get_movie(id: int, movie_df: str) -> str :
     """
@@ -13,6 +26,9 @@ def recommend_nmf(query, user_ratings, movies, model, k=10):
     Filters and recommends the top k movies for any given input query based on a trained NMF model. 
     Returns a list of k movie ids.
     """
+
+    # load model 
+    model  = pickle.load(open(model, 'rb'))
 
     # check if queried films exist
     movie_col_idxs = [int(k) for k in query.keys()]
@@ -39,7 +55,9 @@ def recommend_nmf(query, user_ratings, movies, model, k=10):
     user_scoring = model.transform(user_mat)
     
     # 3. ranking
-    user_ranking = np.dot(user_scoring, nmf.components_)
+    user_ranking = np.dot(user_scoring, model.components_)
+
+    # update
     
 
     
@@ -53,7 +71,7 @@ def recommend_nmf(query, user_ratings, movies, model, k=10):
     top_rankings = user_ranking.sort_values(by = 'user', axis = 1, ascending = False).iloc[[0], 0:k]
 
     # return the top-k highst rated movie ids or titles
-    print(su.get_movie(id = top_rankings.columns, movie_df = movies))
+    print(get_movie(id = top_rankings.columns, movie_df = movies))
 
 
     return top_rankings
