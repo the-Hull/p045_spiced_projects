@@ -12,6 +12,11 @@ def prep_ratings(path_json, imputer_fill):
     return ratings
     
 
+def get_id(title, movies):
+    return movies.index.values[movies['title']==title]
+
+
+
 
 def get_movie(id: int, movie_df: str) -> str :
     """
