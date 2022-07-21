@@ -48,13 +48,6 @@ class MovieRecommender:
                 k = self.k)
 
 
-
-
-
-
-
-
-
 if __name__ == "__main__":
     
     print(su.get_id('Black Butler: Book of the Atlantic (2017)', movies = movies))
@@ -66,24 +59,7 @@ if __name__ == "__main__":
     )
 
     # movrec.recommend(method = 'NFM', k = 3, model = MODEL_PATH) # must work
-    movrec.recommend(method = 'NFM', k = 3) # must fail
-
-
-
-# recommendation = su.recommend_nmf(
-#     query = {1:5, 2:5, 3:2.5, 356: 4, 480: 2, 260: 5, 12: 4, 300: 1},
-#     user_ratings=ratings,
-#     movies=movies,
-#     model = MODEL_PATH,
-#      k = 5)
-
-
-# print(recommendation)
-
-
-# su.recommend_most_popular(query = {296: 2, 593: 1,589:2, 1:5, 2:5, 3:2.5, 356: 4, 480: 2, 260: 5, 12: 4, 300: 1},
-#     user_ratings=ratings,
-#     movies=movies,
-#     k = 5)
+    # movrec.recommend(method = 'NFM', k = 3) # must fail
+    movrec.recommend(method = 'Most Popular', k = 5) # must work
 
 

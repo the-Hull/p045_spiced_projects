@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h1> Welcome to my Movie Recommender </h1>
+<h2>To get movie recommendations please do the following:</h2>
+<ul>
+    <li>Enter method</li>
+    <li>Enter a movie title</li>
+    <li>Enter a rating between 0 and 5</li>
+    <li>Click on the submit button</li>
+</ul>
+
+<form action="/recommender">
+    <select name="method">
+        <option>Most Popular</option>
+        <option>NFM</option>
+    </select>
+    <br>
+    <br>
+    {% for i in range(3)%}
+    <input type="text"
+           name="title"
+           placeholder="Movie title"
+           required
+           list="movies"
+           autocomplete="off"
+    </input>
+
+     <input type="text"
+           name="rating"
+           placeholder="1-5"
+           required
+    </input>
+    <br>
+    <br>
+    {% endfor %}
+
+    <button type="submit">Show Recommendations</button>
+
+</form>
+<datalist id="movies">
+    {% for movie in movies%}
+    <option value="{{movie}}"></option>
+    {% endfor %}
+
+</datalist>
+<a href="/recommender">Go to recommender</a>
+<br>
+<br>
+<a href="https://www.w3schools.com/">Click here to learn more about html and other languages</a>
+
+{% endblock %}
