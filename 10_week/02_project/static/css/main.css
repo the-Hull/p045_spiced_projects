@@ -74,3 +74,21 @@ body {
     color: #444;
     text-decoration: none;
   }
+
+
+  div.inputs-method {
+    border-radius: 25px;
+    background: #73AD21;
+    padding: 20px;
+    width: 75%;
+    height: 7em; 
+  }
+
+
+  div.inputs-ratings {
+    border-radius: 25px;
+    background: #73AD21;
+    padding: 20px;
+    width: 75%;
+    height: auto; 
+  }

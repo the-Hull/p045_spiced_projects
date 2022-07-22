@@ -1,69 +1,138 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<script>
-    function get_rec_method() {
-      window.rmc = document.getElementsByName("rec_method")[0].value;
-      console.log(rmc);
-    }
-</script>
-
-
-<h1> Welcome to my Movie Recommender </h1>
-<h2>To get movie recommendations please do the following:</h2>
-<ul>
-    <li>Enter method</li>
-    <li>Enter a movie title</li>
-    <li>Enter a rating between 0 and 5</li>
-    <li>Click on the submit button</li>
-</ul>
 
 
 
-<form action="{{ url_for('recommender') }}" method = "POST">
+
+<h1 class="pb-2 border-bottom">Get recommendations</h2>
+<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+  <div class="col d-flex align-items-start">
+    <div>
+      <h2>Method</h2>
+      <p>NFM checks for overlap with other user ratings by calculating similarity. Most popular relies on the power of the masses and takes the top rated films.</p>
+    </div>
+  </div>
+  {% if method_pred == "NFM" %}
+  <div class="col d-flex align-items-start">
+    <div>
+      <h2>Rate some movies!</h2>
+      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+    </div>
+  </div>
+  {% endif %}
+  <div class="col d-flex align-items-start">
+    <div>
+      <h2>Get recommendations!</h2>
+      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+      <a href="#inputs" class="btn btn-primary">
+        Check it out!
+      </a>
+    </div>
+  </div>
+</div>
 
 
-    <p>Please select your favorite Web language:</p>
-    <input onchange="get_rec_method()" type="radio" id="NFM" name="rec_method" value="NFM">
-    <label for="NFM">NFM</label><br>
-    <input onchange="get_rec_method()" type="radio" id="mostpopular" name="rec_method" value="most_popular">
-    <label for="mostpopular">Most Popular</label>
-    <br>
-    <br>
 
-    {% if rmc == 'NFM' %}
-      
 
+<div id="inputs" class="h-100 p-5 bg-light border rounded-3">
+
+    <div id ="inputs-method-selector">
+        <form action="{{ url_for('index') }}" name = 'method_select' method = "GET">
+
+            <p>Choose your recommendation method:</p>
+
+            {% if method_pred == "NFM" %}
+                <input onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM" checked="checked">
+                <label for="NFM">NFM</label><br>
+                <input onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular">
+                <label for="mostpopular">Most Popular</label><br>
+            {% elif method_pred == "most_popular" %}
+                <input onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM">
+                <label for="NFM">NFM</label><br>
+                <input onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular" checked="checked">
+                <label for="mostpopular">Most Popular</label><br>
+            {% else %}
+                <input onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM">
+                <label for="NFM">NFM</label><br>
+                <input onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular">
+                <label for="mostpopular">Most Popular</label><br>
+            {% endif %}   
+
+
+            <br>
     
-        {% for i in range(3)%}
-        <input type="text"
-            name="title"
-            placeholder="Movie title"
-            required
-            list="movies"
-            autocomplete="off"
-        </input>
+        </form>
+    </div>
 
-        <input type="text"
-            name="rating"
-            placeholder="1-5"
-            required
-        </input>
-        <br>
-        <br>
-        {% endfor %}
-    {% endif %}
+    <br>
 
-    <button type="submit">Show Recommendations</button>
+    <div id = "inputs-ratings-selector">
 
-</form>
+        <form action="{{ url_for('recommender') }}" method = "GET">
+        
+
+            {% if method_pred == 'NFM' %}
+            
+
+            
+                {% for i in range(3)%}
+
+                <input type="text"
+                    name="title"
+                    placeholder="Movie title"
+                    required
+                    list="movies"
+                    autocomplete="off"
+                </input>
+
+                <input type="range" id="rating-{{i+1}}" name="volume" min="1" max="5">
+                <label for="rating-{{i+1}}">Rating {{i}}</label>
+                </input>
+            <br>
+            <br>
+
+
+                <!-- <input type="text"
+                    name="title"
+                    placeholder="Movie title"
+                    required
+                    list="movies"
+                    autocomplete="off"
+                </input>
+
+                <input type="text"
+                    name="rating"
+                    placeholder="1-5"
+                    required
+                </input>
+                <br>
+                <br> -->
+                {% endfor %}
+            {% endif %}
+
+            <br>
+
+            <button type="submit" class="btn btn-info">Show Recommendations</button>
+
+        </form>
+
+    </div>
+    
+</div>
+
+
 <datalist id="movies">
     {% for movie in movies%}
     <option value="{{movie}}"></option>
     {% endfor %}
 
 </datalist>
+
+
+
 <a href="/recommender">Go to recommender</a>
+<br>
 <br>
 <br>
 <a href="https://www.w3schools.com/">Click here to learn more about html and other languages</a>
