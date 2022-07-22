@@ -1,6 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<script>
+    function get_rec_method() {
+      window.rmc = document.getElementsByName("rec_method")[0].value;
+      console.log(rmc);
+    }
+</script>
+
+
 <h1> Welcome to my Movie Recommender </h1>
 <h2>To get movie recommendations please do the following:</h2>
 <ul>
@@ -11,18 +19,19 @@
 </ul>
 
 
-<form action="{{ url_for('index') }}">
-    <select name="rec_method" id="rec_method" onchange="this.form.submit()">
-        <option value = "NFM">NFM</option>
-        <option value = "Most Popular">Most Popular</option>
-    </select>
-</form>
-<br>
 
 <form action="{{ url_for('recommender') }}" method = "POST">
 
 
-    {% if request.args.get('rec_method') == 'NFM' %}
+    <p>Please select your favorite Web language:</p>
+    <input onchange="get_rec_method()" type="radio" id="NFM" name="rec_method" value="NFM">
+    <label for="NFM">NFM</label><br>
+    <input onchange="get_rec_method()" type="radio" id="mostpopular" name="rec_method" value="most_popular">
+    <label for="mostpopular">Most Popular</label>
+    <br>
+    <br>
+
+    {% if rmc == 'NFM' %}
       
 
     
