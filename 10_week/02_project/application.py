@@ -38,6 +38,6 @@ def index():
 def recommender():
     return render_template('recommender.html')
 if __name__ == '__main__':
-    print(rc.movies.head())
+    # print(rc.movies.head())
     app.run(debug=True)
     
