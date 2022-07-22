@@ -10,30 +10,40 @@
     <li>Click on the submit button</li>
 </ul>
 
-<form action="/recommender">
-    <select name="method">
-        <option>Most Popular</option>
-        <option>NFM</option>
-    </select>
-    <br>
-    <br>
-    {% for i in range(3)%}
-    <input type="text"
-           name="title"
-           placeholder="Movie title"
-           required
-           list="movies"
-           autocomplete="off"
-    </input>
 
-     <input type="text"
-           name="rating"
-           placeholder="1-5"
-           required
-    </input>
-    <br>
-    <br>
-    {% endfor %}
+<form action="{{ url_for('index') }}">
+    <select name="rec_method" id="rec_method" onchange="this.form.submit()">
+        <option value = "NFM">NFM</option>
+        <option value = "Most Popular">Most Popular</option>
+    </select>
+</form>
+<br>
+
+<form action="{{ url_for('recommender') }}" method = "POST">
+
+
+    {% if request.args.get('rec_method') == 'NFM' %}
+      
+
+    
+        {% for i in range(3)%}
+        <input type="text"
+            name="title"
+            placeholder="Movie title"
+            required
+            list="movies"
+            autocomplete="off"
+        </input>
+
+        <input type="text"
+            name="rating"
+            placeholder="1-5"
+            required
+        </input>
+        <br>
+        <br>
+        {% endfor %}
+    {% endif %}
 
     <button type="submit">Show Recommendations</button>
 

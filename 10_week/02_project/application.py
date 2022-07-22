@@ -1,10 +1,19 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import src.utils as su
 import recommender as rc
 
 app = Flask(__name__)
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
+
+
+
+    # method_pred = None
+
+    # if request.args.getlist("method")[0]
+
+
+
     return render_template('index.html', movies = rc.movies['title'])
 @app.route('/recommender/')
 def recommender():
