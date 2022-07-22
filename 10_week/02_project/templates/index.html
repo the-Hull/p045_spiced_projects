@@ -4,27 +4,35 @@
 
 
 
+{% set ns = namespace(value=1) %}
 
-<h1 class="pb-2 border-bottom">Get recommendations</h2>
-<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+<!-- <h1 class="pb-2 border-bottom">Get recommendations</h2> -->
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
   <div class="col d-flex align-items-start">
     <div>
-      <h2>Method</h2>
-      <p>NFM checks for overlap with other user ratings by calculating similarity. Most popular relies on the power of the masses and takes the top rated films.</p>
+        <h2>{{ns.value}}. Method</h2>
+        {% set ns.value = ns.value + 1 %}
+
+        {% if method_pred == "NFM" %}
+            <p><strong>NFM</strong> checks for overlap with other user ratings by calculating similarity.
+        {% else %}
+        <strong>Most popular</strong> relies on the power of the masses and takes the top rated films.</p>
+        {% endif %}
     </div>
   </div>
   {% if method_pred == "NFM" %}
   <div class="col d-flex align-items-start">
     <div>
-      <h2>Rate some movies!</h2>
+      <h2>{{ns.value}}. Rate some movies!</h2>
+      {% set ns.value = ns.value + 1 %}
       <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
     </div>
   </div>
   {% endif %}
   <div class="col d-flex align-items-start">
     <div>
-      <h2>Get recommendations!</h2>
-      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+      <h2>{{ns.value}}. Get recommendations!</h2>
+      <p>Choose <strong>how many recommendations</strong> you'd like, and click on <strong>Recommend</strong> text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
       <a href="#inputs" class="btn btn-primary">
         Check it out!
       </a>
@@ -43,20 +51,20 @@
             <p>Choose your recommendation method:</p>
 
             {% if method_pred == "NFM" %}
-                <input onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM" checked="checked">
-                <label for="NFM">NFM</label><br>
-                <input onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular">
-                <label for="mostpopular">Most Popular</label><br>
+                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM" checked="checked">
+                <label class="form-check-label" for="NFM">NFM</label><br>
+                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular">
+                <label class="form-check-label" for="mostpopular">Most Popular</label><br>
             {% elif method_pred == "most_popular" %}
-                <input onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM">
-                <label for="NFM">NFM</label><br>
-                <input onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular" checked="checked">
-                <label for="mostpopular">Most Popular</label><br>
+                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM">
+                <label class="form-check-label" for="NFM">NFM</label><br>
+                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular" checked="checked">
+                <label class="form-check-label" for="mostpopular">Most Popular</label><br>
             {% else %}
-                <input onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM">
-                <label for="NFM">NFM</label><br>
-                <input onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular">
-                <label for="mostpopular">Most Popular</label><br>
+                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM">
+                <label class="form-check-label" for="NFM">NFM</label><br>
+                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular" checked="checked">
+                <label class="form-check-label" for="mostpopular">Most Popular</label><br>
             {% endif %}   
 
 
@@ -90,6 +98,9 @@
                 <label for="rating-{{i+1}}">Rating {{i}}</label>
                 </input>
             <br>
+
+
+            
             <br>
 
 
@@ -113,7 +124,7 @@
 
             <br>
 
-            <button type="submit" class="btn btn-info">Show Recommendations</button>
+            <button type="submit" class="btn btn-primary">Recommend</button>
 
         </form>
 
@@ -131,10 +142,6 @@
 
 
 
-<a href="/recommender">Go to recommender</a>
-<br>
-<br>
-<br>
-<a href="https://www.w3schools.com/">Click here to learn more about html and other languages</a>
+
 
 {% endblock %}
