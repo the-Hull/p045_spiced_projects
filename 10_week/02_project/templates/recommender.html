@@ -1,8 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="recommender">
-    <h1>About me</h1>
-    <p>This is a portfolio site about anything that can be put in a portfolio.</p>
+<div id="recommendations" class="h-100 mt-5 p-5 bg-light border rounded-3">
+  <div class="recommender">
+    <h1>These are your movie recommendations:</h1>
+    <br>
+    <ul class = "list-group">
+        {% for rec in recs %}
+        <li class = "list-group-item">{{rec}}</li>
+        <br>
+        {% endfor %}
+    </ul>
+    <br>
+    <a href="{{ url_for('index') }}">Go to main page</a>
   </div>
+</div>
 
 {% endblock %}

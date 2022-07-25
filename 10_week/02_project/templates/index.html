@@ -43,7 +43,7 @@
 
 
 
-<div id="inputs" class="h-100 p-5 bg-light border rounded-3">
+    <div id="inpu"h-100 p-5 bg-light border rounded-3ts" class="h-100 p-5 bg-light border rounded-3">
 
     <div id ="inputs-method-selector">
         <form action="{{ url_for('index') }}" name = 'method_select' method = "GET">
@@ -51,20 +51,20 @@
             <p>Choose your recommendation method:</p>
 
             {% if method_pred == "NFM" %}
-                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM" checked="checked">
-                <label class="form-check-label" for="NFM">NFM</label><br>
                 <input class="form-check-input" onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular">
                 <label class="form-check-label" for="mostpopular">Most Popular</label><br>
+                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM" checked="checked">
+                <label class="form-check-label" for="NFM">NFM</label><br>
             {% elif method_pred == "most_popular" %}
-                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM">
-                <label class="form-check-label" for="NFM">NFM</label><br>
                 <input class="form-check-input" onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular" checked="checked">
                 <label class="form-check-label" for="mostpopular">Most Popular</label><br>
+                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM">
+                <label class="form-check-label" for="NFM">NFM</label><br>
             {% else %}
-                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM">
-                <label class="form-check-label" for="NFM">NFM</label><br>
                 <input class="form-check-input" onchange="this.form.submit()" type="radio" id="mostpopular" name="rec_method" value="most_popular" checked="checked">
                 <label class="form-check-label" for="mostpopular">Most Popular</label><br>
+                <input class="form-check-input" onchange="this.form.submit()" type="radio" id="NFM" name="rec_method" value="NFM">
+                <label class="form-check-label" for="NFM">NFM</label><br>
             {% endif %}   
 
 
@@ -91,12 +91,15 @@
                     placeholder="Movie title"
                     required
                     list="movies"
-                    autocomplete="off"
-                </input>
+                    autocomplete="off">
 
-                <input type="range" id="rating-{{i+1}}" name="volume" min="1" max="5">
+                <input type="range" 
+                id="rating-{{i+1}}" 
+                name="rating" 
+                min="1" 
+                max="5">
                 <label for="rating-{{i+1}}">Rating {{i}}</label>
-                </input>
+                
             <br>
 
 

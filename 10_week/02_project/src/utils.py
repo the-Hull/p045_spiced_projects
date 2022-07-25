@@ -13,8 +13,16 @@ def prep_ratings(path_json, imputer_fill):
     
 
 def get_id(title, movies):
-    return movies.index.values[movies['title']==title]
+    return int(movies.index.values[movies['title']==title])
 
+def make_query_list(ids, ratings):
+
+    assert len(ids) == len(ratings), "Need same length for ratings and movies"
+
+    query = dict()
+    for k,v in zip(ids, ratings):
+        query[k] = query.get(k, v)
+    return query
 
 
 
@@ -84,19 +92,19 @@ def recommend_nmf(query, user_ratings, movies, model, k=10):
     top_rankings = user_ranking.sort_values(by = 'user', axis = 1, ascending = False).iloc[[0], 0:k]
 
     # return the top-k highst rated movie ids or titles
-    print(get_movie(id = top_rankings.columns, movie_df = movies))
+    # print(get_movie(id = top_rankings.columns, movie_df = movies))
 
 
     return top_rankings
 
 
 
-def recommend_most_popular(query, user_ratings, movies, k=5):
+def recommend_most_popular(user_ratings, movies, k=5):
 
 
-    user_ratings = user_ratings.loc[:, [x not in query.keys() for x in user_ratings.columns]]
+    # user_ratings = user_ratings.loc[:, [x not in query.keys() for x in user_ratings.columns]]
 
-    top_mean_ratings = user_ratings.apply(axis=0, func = np.mean).sort_values(ascending = False)[:k+1]
+    top_mean_ratings = user_ratings.apply(axis=0, func = np.mean).sort_values(ascending = False)[:k]
 
     top_mean_ratings = top_mean_ratings.to_frame().T
 
@@ -105,3 +113,9 @@ def recommend_most_popular(query, user_ratings, movies, k=5):
 
 
     return top_mean_ratings
+
+if __name__ == "__main__":
+
+
+    print(make_query_list([10,5,3], [1.1, 2.2, 3.3]))
+    print(make_query_list([10,3], [1.1, 2.2, 3.3]))
