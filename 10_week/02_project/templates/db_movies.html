@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
+
+<div class="h-100 mt-5 p-5 bg-light border rounded-3">
+<h3>Movies</h3>
 <div id="table"></div>
+
 <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
     <script>
       new gridjs.Grid({
@@ -27,5 +31,6 @@
         },
       }).render(document.getElementById('table'));
     </script>
+</div>
 </div>
 {% endblock %}

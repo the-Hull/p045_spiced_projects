@@ -3,6 +3,7 @@ from requests import Session
 import src.utils as su
 
 import recommender as rc
+import src.viz as viz
 
 sess = Session()
 
@@ -107,6 +108,13 @@ def data():
 def dbmovies():
 
     return render_template("db_movies.html")
+
+@app.route('/dbusers/')
+def dbusers():
+
+    plot = viz.plot_users()
+
+    return render_template("db_users.html", plot = plot)
 
 
 

@@ -108,7 +108,7 @@ def recommend_most_popular(user_ratings, movies, k=5):
 
     top_mean_ratings = top_mean_ratings.to_frame().T
 
-    print(get_movie(id = top_mean_ratings.columns, movie_df = movies))
+    # print(get_movie(id = top_mean_ratings.columns, movie_df = movies))
 
 
 
