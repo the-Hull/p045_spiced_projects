@@ -7,15 +7,16 @@ import pandas as pd
 MODEL_PATH = "../00_models/nmf.bin"
 
 # load data
-movies = pd.read_csv('../00_data/ml-latest-small/movies.csv', index_col='movieId')
+# movies = pd.read_csv('../00_data/ml-latest-small/movies.csv', index_col='movieId')
+# movies['year'] = movies.title.str.extract("[(](\d{4})[)]")
 ratings = su.prep_ratings("../00_data/nmf_ratings_matrix.json", 0)
 
-movies['year'] = movies.title.str.extract("[(](\d{4})[)]")
 
+
+
+
+movies = pd.read_json("../00_data/movie_ratings.json").set_index('movieId')
 movies.fillna(value=0000, inplace=True)
-movies = movies.reset_index()
-
-
 
 class MovieRecommender:
 

@@ -97,8 +97,10 @@ def data():
 
 
 
-    data_dict = {'data' : [r.to_dict() for i,r in rc.movies.iterrows()]}
-   
+    print(rc.movies.head())
+    data_dict = {'data' : [r.to_dict() for i,r in rc.movies.reset_index().iterrows()]}
+    print(data_dict['data'][0])
+
     return data_dict
 
 @app.route('/dbmovies/')
