@@ -51,10 +51,7 @@ def recommender():
 
     movie_ratings = [int(x) for x in request.args.getlist("rating")]
 
-    print(f'movies are {movie_names}')
-    # print(f'ids {movie_ids}')
-    # print(f'ratings are {movie_ratings}')
-    print(f'method is {method_pred}')
+    k_recs = int(request.args.getlist("kpred")[0])
 
     query = {}
 
@@ -63,34 +60,54 @@ def recommender():
         movies=rc.movies
     )
 
+
+
     
 
     if(method_pred == 'NFM'):
-        print('making query')
+    
         query = su.make_query_list(movie_ids, movie_ratings)
 
-    print(query)
-    print('going for recs')
+    
     recs = movrec.recommend(
         query = query,
         method = method_pred, 
-        k = 5, 
+        k = k_recs, 
         model = rc.MODEL_PATH)
     recs = su.get_movie(id = recs.columns, movie_df = rc.movies)
-
-    print(type(recs))
-
-
-
-
-
-
-
 
     return render_template('recommender.html', recs = recs)
 
 
-    
+@app.route('/dbexplore/', methods = ['GET', 'POST'])
+def dbex():
+
+
+
+
+    render = render_template(
+        'db_explore.html',
+        )
+      
+    return render
+
+
+@app.route('/api/data/')
+def data():
+
+
+
+    data_dict = {'data' : [r.to_dict() for i,r in rc.movies.iterrows()]}
+   
+    return data_dict
+
+@app.route('/dbmovies/')
+def dbmovies():
+
+    return render_template("db_movies.html")
+
+
+
 if __name__ == '__main__':
     # print(rc.movies.head())
     app.secret_key = 'super secret key'

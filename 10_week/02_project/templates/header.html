@@ -16,9 +16,9 @@
                             Explore Movie Database
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                            <li><a class="dropdown-item" href="#">Everything</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('dbex') }}">Everything</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Films</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('dbmovies') }}">Films</a></li>
                             <li><a class="dropdown-item" href="#">Users</a></li>
                         </ul>
                     </li>

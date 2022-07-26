@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+<div id="table"></div>
+<script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+    <script>
+      new gridjs.Grid({
+        columns: [
+          { id: 'movieId', name: 'MovieID' },
+          { id: 'title', name: 'Title' },
+          { id: 'year', name: 'Year'},
+          { id: 'genres', name: 'Genres'},
+          
+        ],
+        server: {
+          url: '/api/data',
+          then: results => results.data,
+        },
+        search: {
+          selector: (cell, rowIndex, cellIndex) => [0, 1, 2, 3].includes(cellIndex) ? cell : null,
+        },
+        sort: true,
+        pagination: {
+            enabled: true,
+            limit: 20,
+        },
+      }).render(document.getElementById('table'));
+    </script>
+</div>
+{% endblock %}

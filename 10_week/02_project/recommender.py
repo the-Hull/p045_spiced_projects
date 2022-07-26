@@ -10,6 +10,12 @@ MODEL_PATH = "../00_models/nmf.bin"
 movies = pd.read_csv('../00_data/ml-latest-small/movies.csv', index_col='movieId')
 ratings = su.prep_ratings("../00_data/nmf_ratings_matrix.json", 0)
 
+movies['year'] = movies.title.str.extract("[(](\d{4})[)]")
+
+movies.fillna(value=0000, inplace=True)
+movies = movies.reset_index()
+
+
 
 class MovieRecommender:
 
@@ -52,7 +58,10 @@ class MovieRecommender:
 
         return self.recommendation
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
+
+    print(movies.columns)
+    print(movies.head())
     
     # print(su.get_id('Black Butler: Book of the Atlantic (2017)', movies = movies))
     # print(type(su.get_id('Black Butler: Book of the Atlantic (2017)', movies = movies)))
