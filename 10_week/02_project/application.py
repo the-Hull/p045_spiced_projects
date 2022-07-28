@@ -5,7 +5,7 @@ import src.utils as su
 import recommender as rc
 import src.viz as viz
 
-sess = Session()
+# sess = Session()
 
 app = Flask(__name__)
 # @app.route('/', methods=['GET', 'POST'])
