@@ -1,34 +1,74 @@
-## Read and preprocess data
-import os as os
+import logging
+import os
+from datetime import datetime
+import cv2
+from tensorflow.keras.applications.vgg16 import preprocess_input
+import tensorflow as tf
 import numpy as np
-from tensorflow.keras.preprocessing.image import load_img
-from tensorflow.keras.preprocessing.image import img_to_array
 
-def read_imgs(path_base, dir_categories):
+def write_text_cam(text, frame, col, offset, x, y):
+
+    cv2.putText(
+    frame,
+    text,
+    (x-offset-10,y-offset-10), 
+    cv2.FONT_HERSHEY_SIMPLEX, 
+    1, 
+    col,
+    2,
+    cv2.LINE_AA
+    )
+
+def write_image(out, frame):
     """
-    Base path: str, must have trailing slash
-    dirs: str, also label categories, no slashes
+    writes frame from the webcam as png file to disk. datetime is used as filename.
+    """
+    if not os.path.exists(out):
+        os.makedirs(out)
+    now = datetime.now() 
+    dt_string = now.strftime("%H-%M-%S-%f") 
+    filename = f'{out}/{dt_string}.png'
+    logging.info(f'write image {filename}')
+    cv2.imwrite(filename, frame)
+
+
+def key_action():
+    # https://www.ascii-code.com/
+    k = cv2.waitKey(1)
+    if k == 113: # q button
+        return 'q'
+    if k == 32: # space bar
+        return 'space'
+    if k == 112: # p key
+        return 'p'
+    return None
+
+
+def init_cam(width, height):
+    """
+    setups and creates a connection to the webcam
     """
 
-    # path_categories = map(lambda x: path_base+x, dir_categories)
+    logging.info('start web cam')
+    cap = cv2.VideoCapture(0)
 
-
-    # get file numbers for each category
+    # Check success
+    if not cap.isOpened():
+        raise ConnectionError("Could not open video device")
     
-    X = []
-    y = []
-    y_label_numeric = []
+    # Set properties. Each returns === True on success (i.e. correct resolution)
+    assert cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+    assert cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
-    for idx, dctg in enumerate(dir_categories):
-        
-        path_categories = path_base+dctg
+    return cap
 
-        files_cat = os.listdir(path_categories)
 
-        for i, fc in enumerate(files_cat):
 
-            X.append(img_to_array(load_img(os.path.join(path_categories, fc))))
-            y.append(dctg)
-            y_label_numeric.append(idx)
+def get_predicted_label(model, image, classes):
 
-    return {'X' : np.array(X), 'y' : np.array(y), 'y_label_numeric' : np.array(y_label_numeric)}
+    # img = preprocess_input(image)
+    image = np.expand_dims(image, axis = 0)
+    class_idx = np.argmax(model.predict(image), axis = 1)
+
+    return classes[class_idx[0]], class_idx[0]
+
